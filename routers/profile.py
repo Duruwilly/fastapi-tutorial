@@ -38,7 +38,7 @@ async def read_all(user: user_dependency, db: db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     user_profile = db.query(Users).filter(Users.id == user.get("id")).first()
-    return {"first_name": user_profile.first_name, "last_name": user_profile.last_name, "email": user_profile.email, "username": user_profile.username, "role": user_profile.role, "is_active": user_profile.is_active}
+    return {"first_name": user_profile.first_name, "last_name": user_profile.last_name, "email": user_profile.email, "username": user_profile.username, "role": user_profile.role, "is_active": user_profile.is_active, "phone_number": user_profile.phone_number}
 
 @router.put("/change-password", status_code=status.HTTP_200_OK)
 async def change_password(user: user_dependency, db: db_dependency, password_request: PasswordRequest):
@@ -55,3 +55,16 @@ async def change_password(user: user_dependency, db: db_dependency, password_req
     db.add(user_profile)
     db.commit()
     return {"message": "Password changed successfully"}
+
+@router.put("/update-phone-number", status_code=status.HTTP_200_OK)
+async def update_phone_number(user: user_dependency, db: db_dependency, phone_number: str):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    user_profile = db.query(Users).filter(Users.id == user.get("id")).first()
+    if user_profile is None:
+        raise HTTPException(status_code=404, detail="user not found")
+    user_profile.phone_number = phone_number
+    db.add(user_profile)
+    db.commit()
+    return {"message": "Phone number updated successfully"}
+    

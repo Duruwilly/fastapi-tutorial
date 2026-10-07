@@ -12,6 +12,7 @@ class Users(Base):
     hashed_password = Column(String) #this is the hashed password of the user
     is_active = Column(Boolean, default=True) #this indicates whether the user is active or not, with a default value of True
     role = Column(String, default="user") #this is the role of the user, with a default value of "user". This can be used to differentiate between different types of users (eg; admin, moderator, etc.)
+    phone_number = Column(String(length=15))
 
 class Todos(Base):
     __tablename__ = "todos"
